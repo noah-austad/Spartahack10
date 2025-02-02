@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Sliders with Data Boxes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr 3fr; /* Data box takes less space */
+            gap: 5px;
+            width: 80%;
+        }
+        .data-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            padding: 5px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 95%;
+        }
+        .row {
+            width: 90%;
+            padding: 5px;
+            background: #ddd;
+            border-radius: 5px;
+            text-align: center;
+            margin: 5px 0;
+        }
+        .image-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            padding: 5px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        input[type="range"] {
+            width: 80%;
+            margin-top: 10px;
+        }
+        .output-box {
+            margin-top: 10px;
+            padding: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            width: 50%;
+            text-align: center;
+        }
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            padding: 5px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 40%;
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 5px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #liveOutput {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Data Box and Image 1 -->
+        <div class="data-box">
+            <div class="row" id="row1">Row 1: Data A</div>
+            <div class="row" id="row2">Row 2: Data B</div>
+            <div class="row" id="row3">Row 3: Data C</div>
+            <div class="row" id="row4">Row 4: Data D</div>
+        </div>
+        <div class="image-box">
+            <img src="{{ url_for('static', filename='House.png') }}" alt="House">
+            <input type="range" min="0" max="4" value="1" oninput="updateOutput(0, this.value)">
+            <div class="output-box" id="output0">Value: 1</div>
+        </div>
+
+        <!-- Data Box and Image 2 -->
+        <div class="data-box">
+            <div class="row" id="row5">Row 1: Data A</div>
+            <div class="row" id="row6">Row 2: Data B</div>
+            <div class="row" id="row7">Row 3: Data C</div>
+            <div class="row" id="row8">Row 4: Data D</div>
+        </div>
+        <div class="image-box">
+            <img src="{{ url_for('static', filename='House.png') }}" alt="House">
+            <input type="range" min="0" max="4" value="1" oninput="updateOutput(1, this.value)">
+            <div class="output-box" id="output1">Value: 1</div>
+        </div>
+
+        <!-- Data Box and Image 3 -->
+        <div class="data-box">
+            <div class="row" id="row9">Row 1: Data A</div>
+            <div class="row" id="row10">Row 2: Data B</div>
+            <div class="row" id="row11">Row 3: Data C</div>
+            <div class="row" id="row12">Row 4: Data D</div>
+        </div>
+        <div class="image-box">
+            <img src="{{ url_for('static', filename='House.png') }}" alt="House">
+            <input type="range" min="0" max="4" value="1" oninput="updateOutput(2, this.value)">
+            <div class="output-box" id="output2">Value: 1</div>
+        </div>
+
+        <!-- Data Box and Image 4 -->
+        <div class="data-box">
+            <div class="row" id="row13">Row 1: Data A</div>
+            <div class="row" id="row14">Row 2: Data B</div>
+            <div class="row" id="row15">Row 3: Data C</div>
+            <div class="row" id="row16">Row 4: Data D</div>
+        </div>
+        <div class="image-box">
+            <img src="{{ url_for('static', filename='House.png') }}" alt="House">
+            <input type="range" min="0" max="4" value="1" oninput="updateOutput(3, this.value)">
+            <div class="output-box" id="output3">Value: 1</div>
+        </div>
+        
+        <div class="input-box">
+            <label for="userInput">Day refresh rate:</label>
+            <input type="text" id="userInput" placeholder="Enter number...">
+            <button onclick="updateinterval()">Update Interval</button>
+            <div id="liveOutput"></div>
+        </div>
+    </div>
+
+    <script>
+        let intervalID;
+        let interval = 10000; // Declare interval variable
+
+        function updateOutput(index, value) {
+            document.getElementById("output" + index).innerText = "Value: " + value;
+        }
+
+        function fetchLiveData() {
+            fetch('/data')  // Calls the Flask backend
+                .then(response => response.json())  // Parse JSON response
+                .then(data => {
+                    // Update rows with new data
+                    //house 1
+                    document.getElementById("row1").innerText = `Row 1: ${data.house1.usage*data.house1.mult}`;
+                    // document.getElementById("row2").innerText = `Row 2: ${data.rows[1][0]} - ${data.rows[1][1]}`;
+                    // document.getElementById("row3").innerText = `Row 3: ${data.rows[2][0]} - ${data.rows[2][1]}`;
+                    // document.getElementById("row4").innerText = `Row 4: ${data.rows[3][0]} - ${data.rows[3][1]}`;
+                    // //house 2
+                    // document.getElementById("row5").innerText = `Row 1: ${data.rows[3][0]} - ${data.rows[3][1]}`;
+                    // document.getElementById("row6").innerText = `Row 2: ${data.rows[3][0]} - ${data.rows[3][1]}`;
+                    // document.getElementById("row7").innerText = `Row 3: ${data.rows[0][0]} - ${data.rows[0][1]}`;
+                    // document.getElementById("row8").innerText = `Row 4: ${data.rows[1][0]} - ${data.rows[1][1]}`;
+                    // //house 3
+                    // document.getElementById("row9").innerText = `Row 1: ${data.rows[3][0]} - ${data.rows[3][1]}`;
+                    // document.getElementById("row10").innerText = `Row 2: ${data.rows[3][0]} - ${data.rows[3][1]}`;
+                    // document.getElementById("row11").innerText = `Row 3: ${data.rows[0][0]} - ${data.rows[0][1]}`;
+                    // document.getElementById("row12").innerText = `Row 4: ${data.rows[1][0]} - ${data.rows[1][1]}`;
+                    // //house 4
+                    // document.getElementById("row13").innerText = `Row 1: ${data.rows[3][0]} - ${data.rows[3][1]}`;
+                    // document.getElementById("row14").innerText = `Row 2: ${data.rows[3][0]} - ${data.rows[3][1]}`;
+                    // document.getElementById("row15").innerText = `Row 3: ${data.rows[0][0]} - ${data.rows[0][1]}`;
+                    // document.getElementById("row16").innerText = `Row 4: ${data.rows[1][0]} - ${data.rows[1][1]}`;
+                
+                })
+                .catch(error => console.error("Error fetching data:", error));
+        }
+        
+        function updateinterval() {
+            interval = parseInt(document.getElementById("userInput").value) * 1000;
+            clearInterval(intervalID);
+            intervalID = setInterval(fetchLiveData, interval);
+            document.getElementById("liveOutput").innerText = `Live update every ${interval / 1000} seconds`;
+        }
+        // Call function every x seconds
+        intervalID = setInterval(fetchLiveData, interval);
+
+        // Fetch data immediately on page load
+        fetchLiveData();
+    </script>
+
+</body>
+</html>
