@@ -5,4 +5,5 @@ This repository implements an Energy Trading Platform where household agents int
 The platform is based on two primary functionalities:
 
 Buying Energy: Agents can buy energy if their energy production is less than their energy usage and their savings fall below a target threshold.
+
 Selling Energy: Agents can sell energy once their savings exceed a set threshold, and the agents with the most savings will sell first.
