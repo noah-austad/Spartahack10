@@ -2,7 +2,7 @@
 from uagents import Agent, Bureau, Context, Model
 
 
-interval=1.0
+interval=3.0
 rate=0.1288
 
 class Request(Model):
@@ -21,7 +21,7 @@ house4 = Agent(name="house4", seed="ANTNhousehold4", port=8003, endpoint=["http:
 house1.stored_data = {"bank": 100.0, "production": 30.0, "usage": 10.0, "money":0.0, "mult":4.0}
 house2.stored_data = {"bank": 100.0, "production": 60.0, "usage": 10.0, "money":0.0, "mult":1.0}
 house3.stored_data = {"bank": 100.0, "production": 30.0, "usage": 10.0, "money":0.0, "mult":5.0}
-house4.stored_data = {"bank": 100.0, "production": 30.0, "usage": 10.0, "money":0.0, "mult":3.0}
+house4.stored_data = {"bank": 100.0, "production": 30.0, "usage": 10.0, "money":0.0, "mult":3.5}
 
 address_book = {"house1": house1.address, "house2": house2.address, "house3": house3.address, "house4": house4.address}
 
@@ -29,6 +29,7 @@ address_book = {"house1": house1.address, "house2": house2.address, "house3": ho
 
 @house1.on_interval(period=interval)
 async def house1_update(ctx: Context):
+    ctx.logger.info(f"{house1.stored_data}")
     house1.stored_data["bank"] += house1.stored_data["production"] - house1.stored_data["usage"]*house1.stored_data["mult"]
     #check if need to buy
     if house1.stored_data["production"]<house1.stored_data["usage"]*house1.stored_data["mult"] and house1.stored_data["bank"] <= 2 * house1.stored_data["usage"]*house1.stored_data["mult"]:
@@ -51,7 +52,7 @@ async def house1_message_handler(ctx: Context, sender: str, msg: Message):
 #receive buy order
 @house1.on_message(model=Request)
 async def house1_req_handler(ctx: Context, sender: str, msg: Request):
-    ctx.logger.info(f"Received message from {sender}: {msg.request}")
+    ctx.logger.info(f"Received request from {sender}: {msg.request} kWh")
     available=house1.stored_data["bank"]-house1.stored_data["usage"]*house1.stored_data["mult"]*5
     if msg.request<=available:
         house1.stored_data["bank"]-=msg.request
@@ -66,7 +67,7 @@ async def house1_req_handler(ctx: Context, sender: str, msg: Request):
 #house 2
 @house2.on_interval(period=interval)
 async def house2_update(ctx: Context):
-    
+    ctx.logger.info(f"{house2.stored_data}")
     house2.stored_data["bank"] += house2.stored_data["production"] - house2.stored_data["usage"]*house2.stored_data["mult"]
     #check if need to buy
     if house2.stored_data["production"]<house2.stored_data["usage"]*house2.stored_data["mult"] and house2.stored_data["bank"] <= 2 * house2.stored_data["usage"]*house2.stored_data["mult"]:
@@ -89,7 +90,7 @@ async def house2_message_handler(ctx: Context, sender: str, msg: Message):
 #receive buy order
 @house2.on_message(model=Request)
 async def house2_req_handler(ctx: Context, sender: str, msg: Request):
-    ctx.logger.info(f"Received message from {sender}: {msg.request}")
+    ctx.logger.info(f"Received request from {sender}: {msg.request} kWh")
     available=house2.stored_data["bank"]-house2.stored_data["usage"]*house2.stored_data["mult"]*5
     if msg.request<=available:
         house2.stored_data["bank"]-=msg.request
@@ -101,7 +102,7 @@ async def house2_req_handler(ctx: Context, sender: str, msg: Request):
 #house 3
 @house3.on_interval(period=interval)
 async def house3_update(ctx: Context):
-    
+    ctx.logger.info(f"{house3.stored_data}")
     house3.stored_data["bank"] += house3.stored_data["production"] - house3.stored_data["usage"]*house3.stored_data["mult"]
     #check if need to buy
     if house3.stored_data["production"]<house3.stored_data["usage"]*house3.stored_data["mult"] and house3.stored_data["bank"] <= 2 * house3.stored_data["usage"]*house3.stored_data["mult"]:
@@ -124,7 +125,7 @@ async def house3_message_handler(ctx: Context, sender: str, msg: Message):
 #receive buy order
 @house3.on_message(model=Request)
 async def house3_req_handler(ctx: Context, sender: str, msg: Request):
-    ctx.logger.info(f"Received message from {sender}: {msg.request}")
+    ctx.logger.info(f"Received request from {sender}: {msg.request} kWh")
     available=house3.stored_data["bank"]-house3.stored_data["usage"]*house3.stored_data["mult"]*5
     if msg.request<=available:
         house3.stored_data["bank"]-=msg.request
@@ -136,7 +137,7 @@ async def house3_req_handler(ctx: Context, sender: str, msg: Request):
 #house 4
 @house4.on_interval(period=interval)
 async def house4_update(ctx: Context):
-    
+    ctx.logger.info(f"{house4.stored_data}")
     house4.stored_data["bank"] += house4.stored_data["production"] - house4.stored_data["usage"]*house4.stored_data["mult"]
     #check if need to buy
     if house4.stored_data["production"]<house4.stored_data["usage"]*house4.stored_data["mult"] and house4.stored_data["bank"] <= 2 * house4.stored_data["usage"]*house4.stored_data["mult"]:
@@ -160,7 +161,7 @@ async def house4_message_handler(ctx: Context, sender: str, msg: Message):
 #receive buy order
 @house4.on_message(model=Request)
 async def house4_req_handler(ctx: Context, sender: str, msg: Request):
-    ctx.logger.info(f"Received message from {sender}: {msg.request}")
+    ctx.logger.info(f"Received request from {sender}: {msg.request} kWh")
     available=house4.stored_data["bank"]-house4.stored_data["usage"]*house4.stored_data["mult"]*5
     if msg.request<=available:
         house4.stored_data["bank"]-=msg.request
