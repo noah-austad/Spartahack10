@@ -170,25 +170,23 @@
                 .then(data => {
                     // Update rows with new data
                     //house 1
-                    document.getElementById("row1").innerText = `Row 1: ${data.house1.usage*data.house1.mult}`;
-                    // document.getElementById("row2").innerText = `Row 2: ${data.rows[1][0]} - ${data.rows[1][1]}`;
-                    // document.getElementById("row3").innerText = `Row 3: ${data.rows[2][0]} - ${data.rows[2][1]}`;
-                    // document.getElementById("row4").innerText = `Row 4: ${data.rows[3][0]} - ${data.rows[3][1]}`;
+                    document.getElementById("row1").innerText = `Usage: ${data[0].usage}`;
+                    document.getElementById("row2").innerText = `Prod: ${data[0].production}`;
+                    document.getElementById("row3").innerText = `Bank: ${data[0].bank}`;
+                    document.getElementById("row4").innerText = `$$: ${data[0].money}`;
                     // //house 2
-                    // document.getElementById("row5").innerText = `Row 1: ${data.rows[3][0]} - ${data.rows[3][1]}`;
-                    // document.getElementById("row6").innerText = `Row 2: ${data.rows[3][0]} - ${data.rows[3][1]}`;
-                    // document.getElementById("row7").innerText = `Row 3: ${data.rows[0][0]} - ${data.rows[0][1]}`;
-                    // document.getElementById("row8").innerText = `Row 4: ${data.rows[1][0]} - ${data.rows[1][1]}`;
-                    // //house 3
-                    // document.getElementById("row9").innerText = `Row 1: ${data.rows[3][0]} - ${data.rows[3][1]}`;
-                    // document.getElementById("row10").innerText = `Row 2: ${data.rows[3][0]} - ${data.rows[3][1]}`;
-                    // document.getElementById("row11").innerText = `Row 3: ${data.rows[0][0]} - ${data.rows[0][1]}`;
-                    // document.getElementById("row12").innerText = `Row 4: ${data.rows[1][0]} - ${data.rows[1][1]}`;
-                    // //house 4
-                    // document.getElementById("row13").innerText = `Row 1: ${data.rows[3][0]} - ${data.rows[3][1]}`;
-                    // document.getElementById("row14").innerText = `Row 2: ${data.rows[3][0]} - ${data.rows[3][1]}`;
-                    // document.getElementById("row15").innerText = `Row 3: ${data.rows[0][0]} - ${data.rows[0][1]}`;
-                    // document.getElementById("row16").innerText = `Row 4: ${data.rows[1][0]} - ${data.rows[1][1]}`;
+                    document.getElementById("row5").innerText = `Usage: ${data[1].usage}`;
+                    document.getElementById("row6").innerText = `Prod: ${data[1].production}`;
+                    document.getElementById("row7").innerText = `Bank: ${data[1].bank}`;
+                    document.getElementById("row8").innerText = `$$: ${data[1].money}`;
+                    document.getElementById("row9").innerText = `Usage: ${data[2].usage}`;
+                    document.getElementById("row10").innerText = `Prod: ${data[2].production}`;
+                    document.getElementById("row11").innerText = `Bank: ${data[2].bank}`;
+                    document.getElementById("row12").innerText = `$$: ${data[2].money}`;
+                    document.getElementById("row13").innerText = `Usage: ${data[3].usage}`;
+                    document.getElementById("row14").innerText = `Prod: ${data[3].production}`;
+                    document.getElementById("row15").innerText = `Bank: ${data[3].bank}`;
+                    document.getElementById("row16").innerText = `$$: ${data[3].money}`;
                 
                 })
                 .catch(error => console.error("Error fetching data:", error));
